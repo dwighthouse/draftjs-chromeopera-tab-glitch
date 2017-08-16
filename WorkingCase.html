@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Tab Issue in Draft.js</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/draft-js/0.10.1/Draft.css">
+
+<p>Working case: The latest version of Draft.js (v0.10.1) variation found on the homepage of the Draft.js homepage correctly handles character insertions near a tab character.</p>
+
+<p>The only difference beween this method and the one used in the <a href="ProblemCase.html">Problem Case</a> is that instead of using the CDN stand-alone build of Draft.js, this page uses the stand-alone build of Draft.js from the homepage of Draft.js. Even though they are supposedly the same version (0.10.1), they differ significantly.</p>
+
+<ol>
+    <li>Copy the text in the textarea below which contains an explicit tab character.</li>
+    <li>Paste the copied text into the Draft.js Editor.</li>
+    <li>Move the cursor immediately adjacent to either the left or right of the tab character within the Draft.js Editor.</li>
+    <li>Add two or more characters via keyboard.</li>
+</ol>
+
+<p>Expected result: The added characters are inserted as normal.</p>
+<p>Actual result: The added characters are inserted as normal.</p>
+
+<textarea readonly rows="1" cols="40">	<- A tab character</textarea>
+
+<h3>Draft.js Editor</h3>
+<div id="ReactHook"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.6.1/react-dom.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/immutable/3.7.6/immutable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+<script src="homepageDraft.js"></script>
+
+<script type="text/babel">
+(function() {
+    const Editor = Draft.Editor;
+    const EditorState = Draft.EditorState;
+
+    class App extends React.Component {
+        constructor(props) {
+            super(props);
+
+            this.state = {
+                editorState: EditorState.createEmpty()
+            };
+
+            this.onChange = (editorState) => {
+                this.setState({
+                    editorState: editorState
+                });
+            };
+        }
+
+        render() {
+            return (
+                <div style={{ padding: '8px', border: '2px solid #555' }}>
+                    <Editor
+                        editorState={this.state.editorState}
+                        onChange={this.onChange} />
+                </div>
+            );
+        }
+    }
+
+    ReactDOM.render(<App />, document.getElementById('ReactHook'));
+}());
+</script>
